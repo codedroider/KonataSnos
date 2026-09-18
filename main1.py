@@ -8,11 +8,51 @@ from colorama import Fore, Style, init
 import base64
 init()
 
+art=r'''
+ ▄▀▀▄ █  ▄▀▀▀▀▄   ▄▀▀▄ ▀▄  ▄▀▀█▄   ▄▀▀▀█▀▀▄  ▄▀▀█▄       ▄▀▀▀▀▄  ▄▀▀▄ ▀▄  ▄▀▀▀▀▄   ▄▀▀▀▀▄ 
+█  █ ▄▀ █      █ █  █ █ █ ▐ ▄▀ ▀▄ █    █  ▐ ▐ ▄▀ ▀▄     █ █   ▐ █  █ █ █ █      █ █ █   ▐ 
+▐  █▀▄  █      █ ▐  █  ▀█   █▄▄▄█ ▐   █       █▄▄▄█        ▀▄   ▐  █  ▀█ █      █    ▀▄   
+  █   █ ▀▄    ▄▀   █   █   ▄▀   █    █       ▄▀   █     ▀▄   █    █   █  ▀▄    ▄▀ ▀▄   █  
+▄▀   █    ▀▀▀▀   ▄▀   █   █   ▄▀   ▄▀       █   ▄▀       █▀▀▀   ▄▀   █     ▀▀▀▀    █▀▀▀   
+█    ▐           █    ▐   ▐   ▐   █         ▐   ▐        ▐      █    ▐             ▐      
+▐                ▐                ▐                             ▐                         
+''' # konata snos is open-source! questions/donate - @scrxpts
+
+print('konata snos - проект с открытым исходным кодом! вопросы/донат - @scrxpts')
+print()
+
+url = "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/http.txt"
+test_url = "http://codedroider.github.io/"
+working_proxies = []
+
+try:
+    response = requests.get(url)
+    response.raise_for_status()
+    all_proxies = [line.strip() for line in response.text.splitlines() if line.strip()]
+    
+    random.shuffle(all_proxies)
+    
+    for proxy in all_proxies:
+        if len(working_proxies) >= 5:
+            break
+            
+        proxy_dict = {
+            "http": f"http://{proxy}"
+        }
+        
+        try:
+            test_resp = requests.get(test_url, proxies=proxy_dict, timeout=3)
+            if test_resp.status_code == 200:
+                working_proxies.append(proxy)
+        except requests.RequestException:
+            continue
+
+except requests.RequestException:
+    pass
+
 def main():
     user_id, user, id, request_count, chosen_complaint_type = get_user_input( )
-    proxies = [
-     #Ваши proxy  
-]
+    proxies = working_proxies
 
     for i in range(request_count):
         random_site = random.choice(sites)
@@ -32,8 +72,8 @@ def generate_random_phone():
     return f"+79{ ''.join( random.choice( '0123456789' ) for _ in range ( 9 ) ) }"
 
 def generate_random_email():
-    domains = [ "gmail.com", "mail.ru", "rambler.ru", "ya.ru" ]
-    name_length = random.randint( 5, 10 )
+    domains = [ "gmail.com", "mail.ru", "rambler.ru", "ya.ru", "hotmail.com", "outlook.com" ]
+    name_length = random.randint( 7, 15 )
     letters = "abcdefghijklmnopqrstuvwxyz1234567890"
     email_name = ''.join( random.choice( letters ) for _ in range (name_length ) )
     return f"{ email_name }@{random.choice( domains ) }"
@@ -47,25 +87,25 @@ def clear_screen():
 
 complaint_types = {
     "Спам": [
-        "Пользователь {user} ID: {user_id} использует чат для рассылки рекламы и спама, что нарушает правила сообщества. Прошу удалить его сессию и заблокировать возможность отправки нежелательных сообщений.",
-        "Здравствуйте, хочу пожаловаться на {user} ID: {user_id}, он использует спам для продвижения своего канала из-за чего невозможно общаться в группе, прошу принять меры по удалению аккаунта. Спасибо",
-        "Доброго времени суток, прошу принять меры по рассылке спама. ID: {user_id} пользователя.",
-        "Жалоба на рассылку рекламы. Пользователь {user} с ID: {user_id} спамит по группам, прошу принять меры",
-        "Hello, I want to complain about ID: {user_id}, he uses spam to promote his channel, which makes it impossible to communicate in the group, please take steps to delete the account. Thank you",
+        "Пользователь {user} ID: {user_id} использует чат для рассылки рекламы и спама, что нарушает правила сообщества. Рекомендую удалить его сессию и заблокировать возможность отправки нежелательных сообщений.",
+        "Здравствуйте, хочу пожаловаться на {user} и ID {user_id}, он использует спам для продвижения своего канала из-за чего невозможно общаться в группе, прошу принять меры по удалению аккаунта или его заморозки. Заранее спасибо.",
+        "Доброго времени суток, прошу принять меры по рассылке спама. {user_id} - ID пользователя.",
+        "Жалоба на рассылку рекламы. Пользователь {user} с ID {user_id} спамит по группам, прошу принять меры",
+        "Hello, I want to complain about user with ID {user_id}, he uses spam in some chats to promote his channel, which makes it impossible to communicate in the group, please take steps to delete the account. Thank you.",
         "Good day, I ask you to take measures to send spam. ID: {user_id} of the user.",
-        "Complaint about sending advertisements. User with ID: {user_id} is spamming groups, please take action"
+        "Report about sending advertisements. User with ID {user_id} is spamming popular groups, please take action."
     ],
     "Порнография": [
-        "Добрый день, прошу заблокировать доступ к порнографическому контенту. Акаунту {user} с  ID: {user_id}. Проблема в том что он занимается продажей детской порнографией",
-        "Здравствуйте, хочу подать жалобу на порнографию.  Пользиватель {user} с  ID: {user_id} продает детскую порнографию, прошу принять меры по удалению акаунта. Спасибо",
-        "Данный пользиватель {user} с ID: {user_id} растространяет запрешеный детский контент (дп,цп) прошу вас удалить данный акаунт. Спасибо",
-        "Good afternoon, please block access to pornographic content. Account with ID: {user_id}. The problem is that it sells child pornography",
-         "Hello, I want to file a complaint about pornography. User ID: {user_id} sells child pornography, please take steps to delete the account. Thank you",
-         "This user with ID: {user_id} distributes prohibited children's content (dp, cp), I ask you to delete this account. Thank you",
-         "Пользователь {user_id} распространяет порнографические материалы. Прошу заблокировать его аккаунт за нарушение правил платформы. Ссылка на материалы: {id}",
+        "Добрый день, прошу заблокировать доступ к порнографическому контенту аккаунту {user} с ID {user_id}. Проблема в том, что он занимается продажей незаконного контента.",
+        "Здравствуйте, хочу подать жалобу на порнографию. {user} продает д#тскую п#рнографию, прошу принять меры по удалению аккаунта. Спасибо заранее.",
+        "Пользователь с ID {user_id} растространяет запрещенный детский контент (дп,цп) прошу вас удалить данный аккаунт. Спасибо",
+        "Good afternoon, please block access to p0rnographic content for account with ID {user_id}. The problem is that it sells ch1ld p0rnography.",
+         "Hello, I want to file a complaint/report about p#rnography. User ID: {user_id} sells ch#ld p#rnography, please take steps to delete the account. Thank you in advance.",
+         "User with ID {user_id} distributes prohibited children's content (cp), I ask you to delete this account. Thank you.",
+         "Пользователь {user_id} распространяет п0рнографические материалы. Прошу заблокировать его аккаунт за нарушение правил платформы. Ссылка на юзера - {user}, на нарушение - {violation_link}.",
                 "Обнаружено распространение порнографии пользователем {user_id}. Прошу принять меры. Ссылка на материалы: {id}",
-                "Добрый день, прошу заблокировать аккаунт с  ID: {user_id}. Проблема в том,что он занимается продажей детской порнографией, вот ссылка на нарушение: {id}",
-                "Здравствуйте, хочу подать жалобу на порнографию.  Пользователь с  ID: {user_id} продает детскую порнографию,вот ссылка на нарушение:{id},прошу принять меры по удалению акаунта. Спасибо",
+                "Добрый день, прошу заблокировать аккаунт с ID {user_id}. Проблема в том, что он занимается продажей д3тской п0рнографии, вот ссылка на нарушение: {violation_link}",
+                "Здравствуйте, хочу подать жалобу на порнографию.  Пользователь с  ID: {user_id} продает детскую порнографию,вот ссылка на нарушение:{id},прошу принять меры по удалению аккаунта. Спасибо",
                 "Данный пользователь с ID: {user_id} растространяет запрещеный детский контент (дп,цп) прошу вас удалить данный акаунт.Также ссылка на нарушение:{id}.Спасибо",
                 "Добрый день, прошу заблокировать аккунт с айди: {user_id} за распространение порнографии, точнее этот человек размещает порнографию, а также детскую порнографию в чатах ({id}) и так далее, что может повлиять на психику людей, которые находятся в этих чатах, а также это нарушает вашу политику, прошу заблокировать данного человека, также на момент жалобы у этого человека на аватарке было неприличное фото, поэтому прошу вас отреагировать на это быстро и четко. Заранее спасибо!",
                          "Hello, I want to file a complaint about pornography. User with ID: {user_id} sells child pornography,link to violation: {id},please take steps to delete the account. Thank you",
@@ -74,15 +114,16 @@ complaint_types = {
                 "Good afternoon, I ask you to block the account with ID: {user_id} for distributing pornography, more precisely, this person posts pornography, as well as child pornography in chats and so on,link to violation: {id},which can affect the psyche of people who are in these chats, and also violates your policy, I ask you to block this person, also at the time of the complaint this person had an indecent photo on his avatar, so I ask you to respond to this quickly and clearly. Thank you in advance!" 
     ],
     "Фишинг": [
-       "Здравствуйте, сообщаю о подозрительной попытке фишинга. Акк: {user} ID: {user_id}.",
-        "Добрый день, прошу обратить внимание на пользивателя {user} с ID: {user_id} он создает фишинг сылки, прошу принять меры по удалению данного акаунта",
-        "Жалоба на фишинг. Пожалуйста, примите меры. {user} с ID: {user_id} использует фишинг для получения личных данных других пользывателей, прошу принять меры по удалению акаунта. Спасибо",
+       "Здравствуйте, сообщаю о подозрительной попытке фишинга. Аккаунт/Юзернейм: {user} ID: {user_id}.",
+        "Добрый день, прошу обратить внимание на пользователя {user} с ID {user_id} - он создает фишинговые сылки, прошу принять меры по удалению данного аккаунта или его ограничении/заморозки.",
+        "Жалоба на фишинг. Пожалуйста, примите меры. {user} с ID: {user_id} использует фишинг для получения личных данных других пользывателей, прошу принять меры по удалению аккаунта. Спасибо",
+        "Человек пытался меня поймать на фишинг или IP-логгер. Это небезопасно, рекомендую заморозить его аккаунт, чтобы он таким не занимался.",
         "Hello, I'm reporting a suspicious phishing attempt. ID: {user_id}.",
          "Good afternoon, please pay attention to the user with ID: {user_id}, he creates phishing links, please take measures to delete this account",
          "Phishing complaint. Please take action. ID: {user_id} uses phishing to obtain personal information of other users, please take action to delete the account. Thank you"    
     ],
-    "Дианон": [
-       "Здравствуйте уважаемая поддержка телеграмм,хочу пожаловаться на пользователя {user} с ID:{user_id} дело в том что он нарушает правила телеграмм, он продает услули деанона, занимается терроризмом , а еще хочу сообщить что он оскорбляет чужие личности! ",
+    "Деанон": [
+       "Здравствуйте уважаемая поддержка телеграмм,хочу пожаловаться на пользователя {user} с ID:{user_id} дело в том что он нарушает правила телеграмм, он продает услуги деанона/докса/пробива, а еще хочу сообщить что он оскорбляет чужие личности! ",
     "Здравствуйте уважаемая поддержка. Пользователь {user} вашей платформы Telegram с ID: {user_id}, угрожает дean0минuзациеё и свaтuнг0м. Требую удалить его аккаунт для безопасности других пользователей.",
     "Telegram, деактивируйте аккаунт {user} с ID: {user_id}, так как с него мне поступают многочисленные угрозы дean0н0м и сват0м, пугает также моих друзей, говорит, что сольёт их данные в сеть",
     "Данный пользователь {user} с ID: {user_id}, угрожает мне д0kсинг0м и свaтuнг0м. Он хочет слить мои данные в сеть. Просьба удалить его аккаунт для безопастности",
@@ -105,6 +146,7 @@ complaint_types = {
     "Требую наказать мошенника {user} с ID: {user_id}!Он обманул меня и многих других пользователей. Прошу принять меры!",
     "Обращаюсь к вам с просьбой о помощи.Пользователь {user} с ID: {user_id} обманным путем завладел моими средствами. Прошу вернуть мои Notcoin и заблокировать мошенника.",
     "Сколько можно терпеть мошенников на вашей платформе? Пользователь с ID: {user_id} продолжает обманывать людей. Прошу принять срочные меры!",
+        "Мошенник/скамер пытался угнать мой аккаунт ради получения моих звёзд и NFT. Просьба его заблокировать. {user}.",
     "Dear support service, I want to report a case of fraud. A user with ID: {user_id} writes to people and offers a service to help them withdraw notcoin to a card. After transferring the notcoin, the user is blacklisted and refuses to transfer the notcoin, I ask you to take measures to delete the account.  Thank you",
          "Good afternoon, I ask you to consider a complaint about fraud. The user with ID: {user_id} is engaged in fraud, I ask you to take measures to assign the account.",
          "Fraud complaint against user ID: {user_id}. Please take action."
@@ -138,25 +180,27 @@ complaint_types = {
         ],
         "Вирт" : [
         "Good afternoon, Telegram support! Account {user} ID: {user_id} uses a virtual number purchased on the website for number activation. It has nothing to do with the number, the number has nothing to do with it. Please sort this out. Thanks in advance!",
+        "Добрый день! {user} купил виртуальный номер (СМС-активация/вирт) ради мошенничества и подделывания отзывов о своих услугах. Примите меры и заранее Вам спасибо."
         ],
         "Насилие": [        
         "Hello, Telegram support! I want to report a case of animal cruelty. User ID: {id} has shared content depicting animal abuse. I urge you to take immediate action and remove the content/block the user.",
         "I am writing to report a disturbing instance of animal abuse that I encountered on Telegram. User ID: {id} is responsible for sharing this content. I kindly request you to investigate this matter and take appropriate action to prevent further harm to animals."],
         "Сессия": [
-        "Здраствуйте,меня взломали и выкинули с аккаунта {user}. Теперь Я не могу зайти на аккаунт так как мгновенно выкидывают меня с аккаунта. Прошу помогите, удалите аккаунт или обнулите сессии, там было очень много важной информации. Вот мой ID: {user_id}",
-                "Здраствуйте, я попался на фишинг ссылку и меня как то взломали, на моем аккаунте {user} было очень много важных вещей, поэтому прошу вас обнулите пожалуйста сессию или же удалите аккаунт.Вот мой айди: {user_id}",
+        "Здрасьте, меня взломали и выкинули с аккаунта {user}. Теперь Я не могу зайти на аккаунт так как мгновенно выкидывают меня с аккаунта. Прошу помогите, удалите аккаунт или обнулите сессии, там было очень много важной информации. Вот мой ID: {user_id}",
+                "Здравствуйте, я попался на фишинговую ссылку и меня как-то взломали, на моем аккаунте {user} было очень много важных вещей, поэтому прошу вас обнулите пожалуйста сессию или же удалите аккаунт.Вот мой айди: {user_id}",
                 "Здравствуйте, у меня украли аккаунт {user} с айди {user_id}, при попытке зайти на него, тот кто украл аккаунт не даёт мне зайти и отключает мою сессию, прошу вас пожалуйста отключить все сессии на данном аккаунте.",
                 "Hello, I fell for a phishing link and somehow got hacked, there were a lot of important things on my account {user}, so I ask you to reset the session or delete the account. Here is my ID: {user_id}",
                 "Hello, my account {user} with ID {user_id} was stolen, when I try to log into it, the one who stole the account does not allow me to log in and disables my session, I ask you to please disable all sessions on this account.",
-                "Здраствуйте,меня взломали и выкинули с аккаунта {user}. Теперь Я не могу зайти на аккаунт так как мгновенно выкидывают меня с аккаунта. Прошу помогите, удалите аккаунт или обнулите сессии, там было очень много важной информации. Вот мой ID: {user_id}"
+                "Здравствуйте, меня взломали и выкинули/разлогинили с аккаунта {user}. Теперь Я не могу зайти на аккаунт, т.к. меня мгновенно выкидывают с аккаунта удалением моей сессии. Прошу помогите, удалите аккаунт или сессии, там было очень много приватной информации. Вот ID моего аккаунта - {user_id}."
         ],
 }       
 
 def get_user_input ():
-    clear_screen ()
+    clear_screen()
+    print(Fore.CYAN + art + Style.RESET_ALL)
     user_id = input( Fore.CYAN + "   Введите ID: " + Style.RESET_ALL )
-    user = input( Fore.CYAN + "   Введите @: " + Style.RESET_ALL ) 
-    id = input( Fore.CYAN + "   Введите cсылку на нарушение ( или для сноса канала/группы): " + Style.RESET_ALL )
+    user = input( Fore.CYAN + "   Введите @username: " + Style.RESET_ALL ) 
+    id = input( Fore.CYAN + "   Введите cсылку на нарушение (или для сноса канала/группы): " + Style.RESET_ALL )
     request_count = int( input( Fore.CYAN + "   Введите количество отправок: " + Style.RESET_ALL ) )
     print(Fore.CYAN + "   Выберите тип жалобы:" + Style.RESET_ALL)
     for i, complaint_type in enumerate(complaint_types.keys()):
@@ -191,24 +235,34 @@ sites = [
     }       
 ]
 
+user_agents = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:135.0) Gecko/20100101 Firefox/135.0",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Safari/605.1.15",
+    "Mozilla/5.0 (iPhone; CPU iPhone OS 18_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Mobile/15E148 Safari/605.1.15",
+    "Mozilla/5.0 (iPad; CPU OS 18_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Mobile/15E148 Safari/605.1.15",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 Edg/133.0.0.0",
+    "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
+]
+
 def send_data_to_server( data, proxies, cause, email, phone ):
     session = requests.Session()
     session.mount( "https://", HTTPAdapter( max_retries=RETRY_STRATEGY ) )
-    headers = {
-        #юзер-агенты
-    }
+    headers = user_agents
     try:
-        proxy = random.choice( proxies )
+        proxy = random.choice(proxies)
         response = session.post( data['url'], headers=headers, data=data['data'], proxies=proxy, timeout=10 )
         response.raise_for_status()
         phone_info = f", phone: {phone}" if phone else ""
-        print( f"[{Fore.GREEN}+{Style.RESET_ALL}] Запрос отправлен на {data['url']}  с причиной: {cause}, email: {email}{phone_info} отправлен через прокси {proxy}!" )
+        print( f"[{Fore.GREEN}+{Style.RESET_ALL}] Запрос отправлен на {data['url']}  с причиной: {cause}, email: {email} и номерок: {phone_info} отправлен через {proxy}" )
     except requests.exceptions.RequestException as e:
-        print( f"[{Fore.RED}-{Style.RESET_ALL}] Ошибка при отправке запроса на {data['url']} через прокси {proxy}: {e}" )
+        print( f"[{Fore.RED}-{Style.RESET_ALL}] Ошибка при отправке запроса на {data['url']} через прокси: {e}" )
 
 def animate_sending( current, total ):
-    print( f"Идет отправка {current} из {total}", end="\r" )
+    print(f"{current}/{total}.", end="\r" )
  
-
 if __name__ == "__main__":
     main()
