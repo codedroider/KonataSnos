@@ -248,21 +248,21 @@ user_agents = [
     "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36"
 ]
 
-def send_data_to_server( data, proxies, cause, email, phone ):
+def send_data_to_server(data, proxies, cause, email, phone):
     session = requests.Session()
-    session.mount( "https://", HTTPAdapter( max_retries=RETRY_STRATEGY ) )
-    headers = user_agents
+    session.mount("https://", HTTPAdapter(max_retries=RETRY_STRATEGY))
+    headers = {"User-Agent": random.choice(user_agents)}
     try:
-        proxy = random.choice(proxies)
-        response = session.post( data['url'], headers=headers, data=data['data'], proxies=proxy, timeout=10 )
+        proxy = random.choice(working_proxies)
+        response = session.post(data['url'], headers={"User-Agent": random.choice(user_agents)}, data=data['data'], proxies={"http": f"http://{proxy}"}, timeout=10)
         response.raise_for_status()
-        phone_info = f", phone: {phone}" if phone else ""
-        print( f"[{Fore.GREEN}+{Style.RESET_ALL}] Запрос отправлен на {data['url']}  с причиной: {cause}, email: {email} и номерок: {phone_info} отправлен через {proxy}" )
+        phone_info = phone if phone else ""
+        print(f"[{Fore.GREEN} +{Style.RESET_ALL}] Запрос отправлен на {data['url']}  с причиной: {cause}, email: {email} и номерок: {phone_info} отправлен через {proxy}")
     except requests.exceptions.RequestException as e:
-        print( f"[{Fore.RED}-{Style.RESET_ALL}] Ошибка при отправке запроса на {data['url']} через прокси: {e}" )
+        print(f"[{Fore.RED} -{Style.RESET_ALL}] Ошибка при отправке запроса на {data['url']} через прокси: {e}")
 
 def animate_sending( current, total ):
-    print(f"{current}/{total}.", end="\r" )
+    print(f"{current}/{total}.", end="\r")
  
 if __name__ == "__main__":
     main()
