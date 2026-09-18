@@ -18,6 +18,9 @@ art=r'''
 ▐                ▐                ▐                             ▐                         
 ''' # konata snos is open-source! questions/donate - @scrxpts
 
+clear_screen()
+print(Fore.CYAN + art + Style.RESET_ALL)
+print()
 print('это проект с открытым исходным кодом! вопросы/донат - @scrxpts')
 print()
 
@@ -196,8 +199,6 @@ complaint_types = {
 }       
 
 def get_user_input ():
-    clear_screen()
-    print(Fore.CYAN + art + Style.RESET_ALL)
     user_id = input( Fore.CYAN + "   Введите ID: " + Style.RESET_ALL )
     user = input( Fore.CYAN + "   Введите @username: " + Style.RESET_ALL ) 
     id = input( Fore.CYAN + "   Введите cсылку на нарушение (или для сноса канала/группы): " + Style.RESET_ALL )
