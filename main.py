@@ -18,7 +18,7 @@ art=r'''
 ▐                ▐                ▐                             ▐                         
 ''' # konata snos is open-source! questions/donate - @scrxpts
 
-print('konata snos - проект с открытым исходным кодом! вопросы/донат - @scrxpts')
+print('это проект с открытым исходным кодом! вопросы/донат - @scrxpts')
 print()
 
 url = "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/http.txt"
