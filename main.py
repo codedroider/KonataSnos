@@ -8,6 +8,9 @@ from colorama import Fore, Style, init
 import base64
 init()
 
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
 art=r'''
  ▄▀▀▄ █  ▄▀▀▀▀▄   ▄▀▀▄ ▀▄  ▄▀▀█▄   ▄▀▀▀█▀▀▄  ▄▀▀█▄       ▄▀▀▀▀▄  ▄▀▀▄ ▀▄  ▄▀▀▀▀▄   ▄▀▀▀▀▄ 
 █  █ ▄▀ █      █ █  █ █ █ ▐ ▄▀ ▀▄ █    █  ▐ ▐ ▄▀ ▀▄     █ █   ▐ █  █ █ █ █      █ █ █   ▐ 
@@ -84,9 +87,6 @@ def generate_random_email():
 def generate_random_string( length ):
     letters = string.ascii_lowercase
     return ''.join( random.choice(letters) for i in range( length ) )
-    
-def clear_screen():
-    os.system('cls' if os.name == 'nt' else 'clear')
 
 complaint_types = {
     "Спам": [
